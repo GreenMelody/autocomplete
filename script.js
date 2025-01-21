@@ -58,10 +58,12 @@ function handleInput(e, textbox, suggestionsContainer) {
 
   let matchedKeys = [];
   let suggestions = [];
+  let hasSuggestions = false;
 
   if (!inputValue.includes(".")) {
     // Match top-level keys
     matchedKeys = Object.keys(data).filter((key) => key.startsWith(inputValue));
+    hasSuggestions = matchedKeys.length > 0;
     matchedKeys.forEach((key) => {
       const suggestionDiv = document.createElement("div");
       suggestionDiv.className = "suggestion-item";
@@ -79,6 +81,7 @@ function handleInput(e, textbox, suggestionsContainer) {
       suggestions = data[key].suggestions.filter((item) =>
         item.name.startsWith(rest.join("."))
       );
+      hasSuggestions = suggestions.length > 0;
       suggestions.forEach((item) => {
         const suggestionDiv = document.createElement("div");
         suggestionDiv.className = "suggestion-item";
@@ -93,9 +96,12 @@ function handleInput(e, textbox, suggestionsContainer) {
       });
     }
   }
-
-  // Update position of suggestion box
-  updateSuggestionPosition(textbox, suggestionsContainer);
+  if (!hasSuggestions) {
+    suggestionsContainer.style.display = "none";
+  } else {
+    updateSuggestionPosition(textbox, suggestionsContainer);
+    suggestionsContainer.style.display = "block";
+  }
 }
 
 function updateSuggestionPosition(textbox, suggestionsContainer) {
