@@ -101,6 +101,13 @@ function handleInput(e, textbox, suggestionsContainer) {
   } else {
     updateSuggestionPosition(textbox, suggestionsContainer);
     suggestionsContainer.style.display = "block";
+
+    // 기본적으로 첫 번째 항목을 선택
+    const items = suggestionsContainer.querySelectorAll(".suggestion-item");
+    if (items.length > 0) {
+      selectedIndex = 0; // 첫 번째 항목 선택
+      updateSelection(items); // 선택 표시 업데이트
+    }
   }
 }
 
