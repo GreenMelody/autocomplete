@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     textbox.addEventListener("focus", (e) => {
       handleInput(e, textbox, suggestionsContainer)
     });
-    textbox.addEventListener("blur", () => suggestionsContainer.style.display = "none"); // Delay hiding
+    textbox.addEventListener("blur", () => setTimeout(() => suggestionsContainer.style.display = "none", 200)); // Delay hiding
   });
 });
 
