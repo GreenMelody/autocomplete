@@ -33,10 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
   suggestionsContainer.style.borderRadius = "4px";
   suggestionsContainer.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
   document.body.appendChild(suggestionsContainer);
+  let selectedIndex = -1;
 
   // Attach event listeners to each textbox
   textboxes.forEach((textbox) => {
     textbox.addEventListener("input", (e) => handleInput(e, textbox, suggestionsContainer));
+    textbox.addEventListener("keydown", (e) => handleKeydown(e, textbox, suggestionsContainer));
     textbox.addEventListener("focus", () => suggestionsContainer.style.display = "block");
     textbox.addEventListener("blur", () => setTimeout(() => suggestionsContainer.style.display = "none", 200)); // Delay hiding
   });
@@ -45,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function handleInput(e, textbox, suggestionsContainer) {
   const inputValue = e.target.value.toLowerCase();
   suggestionsContainer.innerHTML = "";
+  selectedIndex = -1;
 
   if (!inputValue) {
     suggestionsContainer.style.display = "none";
@@ -62,7 +65,7 @@ function handleInput(e, textbox, suggestionsContainer) {
       suggestionDiv.className = "suggestion-item";
       suggestionDiv.innerHTML = `<div class="suggestion-name">${key}</div>`;
       suggestionDiv.addEventListener("click", () => {
-        textbox.value = key + ".";
+        textbox.value = key;
         suggestionsContainer.style.display = "none";
       });
       suggestionsContainer.appendChild(suggestionDiv);
@@ -138,4 +141,41 @@ function getCaretCoordinates(element) {
     left: rect.left + window.scrollX,
     top: rect.top + window.scrollY + fontSize,
   };
+}
+
+function handleKeydown(e, textbox, suggestionsContainer) {
+  const items = suggestionsContainer.querySelectorAll(".suggestion-item");
+
+  if (e.key === "ArrowDown") {
+    // Move selection down
+    if (items.length > 0) {
+      selectedIndex = (selectedIndex + 1) % items.length;
+      updateSelection(items);
+    }
+    e.preventDefault();
+  } else if (e.key === "ArrowUp") {
+    // Move selection up
+    if (items.length > 0) {
+      selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+      updateSelection(items);
+    }
+    e.preventDefault();
+  } else if (e.key === "Enter" || e.key === "Tab") {
+    // Confirm selection
+    if (selectedIndex >= 0 && items[selectedIndex]) {
+      items[selectedIndex].click();
+      e.preventDefault(); // Prevent default form submission (Enter key)
+    }
+  }
+}
+
+function updateSelection(items) {
+  items.forEach((item, index) => {
+    if (index === selectedIndex) {
+      item.classList.add("selected");
+      item.scrollIntoView({ block: "nearest" }); // Ensure selected item is visible
+    } else {
+      item.classList.remove("selected");
+    }
+  });
 }
