@@ -39,8 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
   textboxes.forEach((textbox) => {
     textbox.addEventListener("input", (e) => handleInput(e, textbox, suggestionsContainer));
     textbox.addEventListener("keydown", (e) => handleKeydown(e, textbox, suggestionsContainer));
-    textbox.addEventListener("focus", () => suggestionsContainer.style.display = "block");
-    textbox.addEventListener("blur", () => setTimeout(() => suggestionsContainer.style.display = "none", 200)); // Delay hiding
+    textbox.addEventListener("focus", (e) => {
+      handleInput(e, textbox, suggestionsContainer)
+    });
+    textbox.addEventListener("blur", () => suggestionsContainer.style.display = "none"); // Delay hiding
   });
 });
 
