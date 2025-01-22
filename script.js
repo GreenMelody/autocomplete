@@ -71,6 +71,7 @@ function handleInput(e, textbox, suggestionsContainer) {
       suggestionDiv.addEventListener("click", () => {
         textbox.value = key;
         suggestionsContainer.style.display = "none";
+        textbox.focus();
       });
       suggestionsContainer.appendChild(suggestionDiv);
     });
@@ -91,6 +92,7 @@ function handleInput(e, textbox, suggestionsContainer) {
         suggestionDiv.addEventListener("click", () => {
           textbox.value = `${key}.${item.name}`;
           suggestionsContainer.style.display = "none";
+          textbox.focus();
         });
         suggestionsContainer.appendChild(suggestionDiv);
       });
