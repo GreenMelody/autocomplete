@@ -1,3 +1,4 @@
+let selectedIndex = -1;
 const data = {
   google: {
     suggestions: [
@@ -33,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
   suggestionsContainer.style.borderRadius = "4px";
   suggestionsContainer.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
   document.body.appendChild(suggestionsContainer);
-  let selectedIndex = -1;
 
   // Attach event listeners to each textbox
   textboxes.forEach((textbox) => {
@@ -159,8 +159,12 @@ function getCaretCoordinates(element) {
 }
 
 function handleKeydown(e, textbox, suggestionsContainer) {
-  const items = suggestionsContainer.querySelectorAll(".suggestion-item");
+  // 리스트가 숨겨져 있으면 기본 동작 허용
+  if (suggestionsContainer.style.display === "none") {
+    return;
+  }
 
+  const items = suggestionsContainer.querySelectorAll(".suggestion-item");
   if (e.key === "ArrowDown") {
     // Move selection down
     if (items.length > 0) {
